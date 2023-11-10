@@ -109,6 +109,8 @@ If no test names were supplied, a general test collection process is done and th
 ---@return integer #It returns the number of failures and errors. On success 0 is returned, making is suitable for an exit code.
 function luaunit.LuaUnit.run(...) end
 
+luaunit.run = luaunit.LuaUnit.run
+
 ---@alias listOfNameAndInstances table<string, function|table>
 
 --[[
@@ -166,8 +168,6 @@ function luaunit.success() end
 function luaunit.successIf(condition) end
 
 --[[
-**Alias**: *assert_equals()*
-
 Assert that two values are equal. This is the most used function for assertion within LuaUnit.\
 The values being compared may be integers, floats, strings, tables, functions or a combination of those.
 
@@ -221,63 +221,71 @@ LuaUnit provides other table-related assertions, see `assert-table` .
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertEquals(actual, expected, extra_msg) end
 
---- **Alias**: *assert_not_equals()*
----
+luaunit.assert_equals = luaunit.assertEquals
+
 ---Assert that two values are different. The assertion fails if the two values are identical. It behaves exactly like `assertEquals` but checks for the opposite condition.
 ---@param actual any
 ---@param expected any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotEquals(actual, expected, extra_msg) end
 
---- **Alias**: *assert_eval_to_true()*
----
+luaunit.assert_not_equals = luaunit.assertNotEquals
+
 --- Assert that a given value evals to `true`. Lua coercion rules are applied so that values like `0`, `""`, `1.17` **succeed** in this assertion.\
 --- See `assertTrue` for a strict assertion to boolean `true`.
 ---@param value any
 ---@param extra_msg? string If provided, extra_msg is a string which will be printed along with the failure message.
 function luaunit.assertEvalToTrue(value, extra_msg) end
 
---- **Alias**: *assert_eval_to_false()*
----
+luaunit.assert_eval_to_true = luaunit.assertEvalToTrue
+
 --- Assert that a given value eval to `false`. Lua coercion rules are applied so that `nil` and `false`  **succeed** in this assertion.\
 --- See `assertFalse` for a strict assertion to boolean `false`.
 ---@param value any
 ---@param extra_msg? string If provided, extra_msg is a string which will be printed along with the failure message.
 function luaunit.assertEvalToFalse(value, extra_msg) end
 
---- **Alias**: *assert_true()*
----
+luaunit.assert_eval_to_false = luaunit.assertEvalToFalse
+
 --- Assert that a given value is strictly `true`. Lua coercion rules do not apply so that values like `0`, `""`, `1.17` **fail** in this assertion.\
 --- See `assertEvalToTrue` for an assertion to `true` where Lua coercion rules apply.
 ---@param value any
 ---@param extra_msg? string If provided, extra_msg is a string which will be printed along with the failure message.
-function luaunit.assertTrue(value, extra_msg) end
+function luaunit.assertIsTrue(value, extra_msg) end
 
---- **Alias**: *assert_false()*
----
+luaunit.assertTrue = luaunit.assertIsTrue
+luaunit.assert_true = luaunit.assertIsTrue
+luaunit.assert_is_true = luaunit.assertIsTrue
+
 --- Assert that a given value is strictly `false`. Lua coercion rules do not apply so that `nil` **fails** in this assertion.\
 --- See `assertEvalToFalse` for an assertion to `false` where Lua coertion fules apply.
 ---@param value any
 ---@param extra_msg? string If provided, extra_msg is a string which will be printed along with the failure message.
-function luaunit.assertFalse(value, extra_msg) end
+function luaunit.assertIsFalse(value, extra_msg) end
 
---- **Aliases**: *assert_nil()*, *assertIsNil()*, *assert_is_nil()*
----
+luaunit.assertFalse = luaunit.assertIsFalse
+luaunit.assert_false = luaunit.assertIsFalse
+luaunit.assert_is_false = luaunit.assertIsFalse
+
 --- Assert that a given value is *nil*.
 ---@param value any
 ---@param extra_msg? string If provided, extra_msg is a string which will be printed along with the failure message.
-function luaunit.assertNil(value, extra_msg) end
+function luaunit.assertIsNil(value, extra_msg) end
 
---- **Aliases**: *assert_not_nil()*, *assertNotIsNil()*, *assert_not_is_nil()*
----
+luaunit.assertNil = luaunit.assertIsNil
+luaunit.assert_nil = luaunit.assertIsNil
+luaunit.assert_is_nil = luaunit.assertIsNil
+
 --- Assert that a given value is not *nil* . Lua coercion rules are applied so that values like `0`, `""`, `false` all validate the assertion.
 ---@param value any
 ---@param extra_msg? string If provided, extra_msg is a string which will be printed along with the failure message.
-function luaunit.assertNotNil(value, extra_msg) end
+function luaunit.assertNotIsNil(value, extra_msg) end
+
+luaunit.assertNotNil = luaunit.assertNotIsNil
+luaunit.assert_not_nil = luaunit.assertNotIsNil
+luaunit.assert_not_is_nil = luaunit.assertNotIsNil
 
 --[[
-**Alias**: *assert_is()*
-
 Assert that two variables are identical. For string, numbers, boolean and for nil, this gives the same result as `assertEquals` . For the other types, identity means that the two variables refer to the same object.
 #### Example :
 ```lua
@@ -300,8 +308,8 @@ Assert that two variables are identical. For string, numbers, boolean and for ni
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIs(actual, expected, extra_msg) end
 
---- **Alias**: *assert_not_is()*
----
+luaunit.assert_is = luaunit.assertIs
+
 --- Assert that two variables are not identical, in the sense that they do not refer to the same value.\
 --- See `assertIs` for more details.
 ---@param actual any
@@ -309,8 +317,8 @@ function luaunit.assertIs(actual, expected, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotIs(actual, expected, extra_msg) end
 
---- **Alias**: *assert_str_contains()*
----
+luaunit.assert_not_is = luaunit.assertNotIs
+
 --- Assert that the string *str* contains the substring or pattern *sub*.
 ---
 --- By default, substring is searched in the string. If *isPattern* is provided and is `true`, *sub* is treated as a pattern which is searched inside the string *str* .
@@ -320,8 +328,8 @@ function luaunit.assertNotIs(actual, expected, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertStrContains(str, sub, isPattern, extra_msg) end
 
---- **Alias**: *assert_str_icontains()*
----
+luaunit.assert_str_contains = luaunit.assertStrContains
+
 --- Assert that the string *str* contains the given substring *sub*, irrespective of the case.
 ---
 --- *Note* that unlike `assertStrcontains`, you can not search for a pattern.
@@ -330,8 +338,8 @@ function luaunit.assertStrContains(str, sub, isPattern, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertStrIContains(str, sub, extra_msg) end
 
---- **Alias**: *assert_not_str_contains()*
----
+luaunit.assert_str_icontains = luaunit.assertStrIContains
+
 --- Assert that the string *str* does not contain the substring or pattern *sub*.
 ---
 --- By default, the substring is searched in the string. If *isPattern* is provided and is true, *sub* is treated as a pattern which is searched inside the string *str* .
@@ -341,8 +349,8 @@ function luaunit.assertStrIContains(str, sub, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotStrContains(str, sub, isPattern, extra_msg) end
 
---- **Alias**: *assert_not_str_icontains()*
----
+luaunit.assert_not_str_contains = luaunit.assertNotStrContains
+
 --- Assert that the string *str* does not contain the substring *sub*, irrespective of the case.
 ---
 --- *Note* that unlike `assertNotStrcontains`, you can not search for a pattern.
@@ -351,8 +359,8 @@ function luaunit.assertNotStrContains(str, sub, isPattern, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotStrIContains(str, sub, extra_msg) end
 
---- **Alias**: *assert_str_matches()*
----
+luaunit.assert_not_str_icontains = luaunit.assertNotStrIContains
+
 --- Assert that the string *str* matches the full pattern *pattern*.
 ---
 --- If *start* and *final* are not provided or are *nil*, the pattern must match the full string, from start to end. The function allows to specify the expected start and end position of the pattern in the string.
@@ -363,8 +371,8 @@ function luaunit.assertNotStrIContains(str, sub, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertStrMatches(str, pattern, start, final, extra_msg) end
 
---- **Alias**: *assert_error()*
----
+luaunit.assert_str_matches = luaunit.assertStrMatches
+
 --- Assert that calling functions *func* with the arguments yields an error. If the function does not yield an error, the assertion fails.
 ---
 --- *Note* that the error message itself is not checked, which means that this function does not distinguish between the legitimate error that you expect and another error that might be triggered by mistake.
@@ -376,8 +384,8 @@ function luaunit.assertStrMatches(str, pattern, start, final, extra_msg) end
 ---@param ... unknown
 function luaunit.assertError(func, ...) end
 
---- **Alias**: *assert_error_msg_equals()*
----
+luaunit.assert_error = luaunit.assertError
+
 --- Assert that calling function *func* will generate exactly the given error message. If the function does not yield an error, or if the error message is not identical, the assertion fails.
 ---
 --- Be careful when using this function that error messages usually contain the file name and line number information of where the error was generated. This is usually inconvenient so we have introduced the `assertErrorMsgContentEquals`. Be sure to check it.
@@ -386,24 +394,24 @@ function luaunit.assertError(func, ...) end
 ---@param ... unknown
 function luaunit.assertErrorMsgEquals(expectedMsg, func, ...) end
 
---- **Alias**: *assert_error_msg_content_equals()*
----
+luaunit.assert_error_msg_equals = luaunit.assertErrorMsgEquals
+
 --- Assert that calling function *func* will generate exactly the given error message, excluding the file and line information. File and line information may change as your programs evolve so we find this version more convenient than `assertErrorMsgEquals`.
 ---@param expectedMsg string
 ---@param func function
 ---@param ... unknown
 function luaunit.assertErrorMsgContentEquals(expectedMsg, func, ...) end
 
---- **Alias**: *assert_error_msg_contains()*
----
+luaunit.assert_error_msg_content_equals = luaunit.assertErrorMsgContentEquals
+
 --- Assert that calling function *func* will generate an error message containing *partialMsg* . If the function does not yield an error, or if the expected message is not contained in the error message, the    assertion fails.
 ---@param partialMsg string
 ---@param func function
 ---@param ... unknown
 function luaunit.assertErrorMsgContains(partialMsg, func, ...) end
 
---- **Alias**: *assert_error_msg_matches()*
----
+luaunit.assert_error_msg_contains = luaunit.assertErrorMsgContains
+
 --- Assert that calling function *func* will generate an error message matching *expectedPattern* . If the function does not yield an error, or if the error message does not match the provided patternm the      assertion fails.
 ---
 --- *Note* that matching is done from the start to the end of the error message. Be sure to escape magic all magic characters with `%` (like `-+.?*`).
@@ -412,72 +420,90 @@ function luaunit.assertErrorMsgContains(partialMsg, func, ...) end
 ---@param ... unknown
 function luaunit.assertErrorMsgMatches(expectedPattern, func, ...) end
 
---- **Aliases**: *assertNumber()*, *assert_is_number()*, *assert_number()*
----
+luaunit.assert_error_msg_matches = luaunit.assertErrorMsgMatches
+
 --- Assert that the argument is a number (integer or float).
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsNumber(value, extra_msg) end
 
---- **Aliases**: *assertString()*, *assert_is_string()*, *assert_string()*
----
+luaunit.assertNumber = luaunit.assertIsNumber
+luaunit.assert_is_number = luaunit.assertIsNumber
+luaunit.assert_number = luaunit.assertIsNumber
+
 --- Assert that the argument is a string.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsString(value, extra_msg) end
 
---- **Aliases**: *assertTable()*, *assert_is_table()*, *assert_table()*
----
+luaunit.assertString = luaunit.assertIsString
+luaunit.assert_is_string = luaunit.assertIsString
+luaunit.assert_string = luaunit.assertIsString
+
 --- Assert that the argument is a table.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsTable(value, extra_msg) end
 
---- **Aliases**: *assertBoolean()*, *assert_is_boolean()*, *assert_boolean()*
----
+luaunit.assertTable = luaunit.assertIsTable
+luaunit.assert_is_table = luaunit.assertIsTable
+luaunit.assert_table = luaunit.assertIsTable
+
 --- Assert that the argument is a boolean.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsBoolean(value, extra_msg) end
 
---- **Aliases**: *assertNil()*, *assert_is_nil()*, *assert_nil()*
----
+luaunit.assertBoolean = luaunit.assertIsBoolean
+luaunit.assert_is_boolean = luaunit.assertIsBoolean
+luaunit.assert_boolean = luaunit.assertIsBoolean
+
 --- Assert that the argument is nil.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsNil(value, extra_msg) end
 
---- **Aliases**: *assertFunction()*, *assert_is_function()*, *assert_function()*
----
+luaunit.assertNil = luaunit.assertIsNil
+luaunit.assert_is_nil = luaunit.assertIsNil
+luaunit.assert_nil = luaunit.assertIsNil
+
 --- Assert that the argument is a function.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsFunction(value, extra_msg) end
 
---- **Aliases**: *assertUserdata()*, *assert_is_userdata()*, *assert_userdata()*
----
+luaunit.assertFunction = luaunit.assertIsFunction
+luaunit.assert_is_function = luaunit.assertIsFunction
+luaunit.assert_function = luaunit.assertIsFunction
+
 --- Assert that the argument is a userdata.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsUserdata(value, extra_msg) end
 
---- **Aliases**: *assertCoroutine()*, *assert_is_coroutine()*, *assert_coroutine()*
----
+luaunit.assertUserdata = luaunit.assertIsUserdata
+luaunit.assert_is_userdata = luaunit.assertIsUserdata
+luaunit.assert_userdata = luaunit.assertIsUserdata
+
 --- Assert that the argument is a coroutine (an object with type *thread* ).
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsCoroutine(value, extra_msg) end
 
---- **Aliases**: *assertIsThread()*, *assertThread()*, *assert_is_thread()*, *assert_thread()*
----
+luaunit.assertCoroutine = luaunit.assertIsCoroutine
+luaunit.assert_is_coroutine = luaunit.assertIsCoroutine
+luaunit.assert_coroutine = luaunit.assertIsCoroutine
+
 --- Same function as `assertIsCoroutine` . Since Lua coroutines have the type thread, it's not clear which name is the clearer, so we provide syntax for both names.
 ---@param value any
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertIsThread(value, extra_msg) end
 
---[[
-**Alias**: *assert_items_equals()*
+luaunit.assertThread = luaunit.assertIsThread
+luaunit.assert_is_thread = luaunit.assertIsThread
+luaunit.assert_thread = luaunit.assertIsThread
 
+--[[
 Assert that two tables contain the same items, irrespective of their keys.\
 This function is practical for example if you want to compare two lists but where items are not in the same order:
 ```lua
@@ -493,9 +519,9 @@ The comparison is not recursive on the items: if any of the items are tables, th
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertItemsEquals(actual, expected, extra_msg) end
 
---[[
-**Alias**: *assert_table_contains()*
+luaunit.assert_items_equals = luaunit.assertItemsEquals
 
+--[[
 Assert that the table contains at least one key with value `element`. Element may be of any type (including table), the recursive equality algorithm of assertEquals() is used for verifying the presence of the element.
 ```lua
   lu.assertTableContains( {'a', 'b', 'c', 'd'}, 'b' ) -- assertion succeeds
@@ -507,9 +533,9 @@ Assert that the table contains at least one key with value `element`. Element ma
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertTableContains(table, element, extra_msg) end
 
---[[
-**Alias**: *assert_not_table_contains()*
+luaunit.assert_table_contains = luaunit.assertTableContains
 
+--[[
 Negative version of `assertTableContains` .
 
 Assert that the table contains no element with value `element`. Element
@@ -525,96 +551,96 @@ lu.assertNotTableContains( {1, 2, 3, {4} }, {5} } -- assertion succeeds
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotTableContains(table, element, extra_msg) end
 
---- **Alias**: *assert_nan()*
----
+luaunit.assert_not_table_contains = luaunit.assertNotTableContains
+
 --- Assert that a given number is a *NaN* (Not a Number), according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNan(value, extra_msg) end
 
---- **Alias**: *assert_not_nan()*
----
+luaunit.assert_nan = luaunit.assertNan
+
 --- Assert that a given number is NOT a *NaN* (Not a Number), according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotNan(value, extra_msg) end
 
---- **Alias**: *assert_plus_inf()*
----
+luaunit.assert_not_nan = luaunit.assertNotNan
+
 --- Assert that a given number is *plus infinity*, according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertPlusInf(value, extra_msg) end
 
---- **Alias**: *assert_minus_inf()*
----
+luaunit.assert_plus_inf = luaunit.assertPlusInf
+
 --- Assert that a given number is *minus infinity*, according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertMinusInf(value, extra_msg) end
 
---- **Alias**: *assert_inf()*
----
+luaunit.assert_minus_inf = luaunit.assertMinusInf
+
 --- Assert that a given number is *infinity* (either positive or negative), according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertInf(value, extra_msg) end
 
---- **Alias**: *assert_not_plus_inf()*
----
+luaunit.assert_inf = luaunit.assertInf
+
 --- Assert that a given number is NOT *plus infinity*, according to the definition of IEEE-754_.
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotPlusInf(value, extra_msg) end
 
---- **Alias**: *assert_not_minus_inf()*
----
+luaunit.assert_not_plus_inf = luaunit.assertNotPlusInf
+
 --- Assert that a given number is NOT *minus infinity*, according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotMinusInf(value, extra_msg) end
 
---- **Alias**: *assert_not_inf()*
----
+luaunit.assert_not_minus_inf = luaunit.assertNotMinusInf
+
 --- Assert that a given number is neither *infinity* nor *minus infinity*, according to the definition of IEEE-754_ .
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotInf(value, extra_msg) end
 
---- **Alias**: *assert_plus_zero()*
----
+luaunit.assert_not_inf = luaunit.assertNotInf
+
 --- Assert that a given number is *+0*, according to the definition of IEEE-754_ . The verification is done by dividing by the provided number and verifying that it yields *infinity* .\
 --- Be careful when dealing with *+0* and *-0*, see note above.
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertPlusZero(value, extra_msg) end
 
---- **Alias**: *assert_minus_zero()*
----
+luaunit.assert_plus_zero = luaunit.assertPlusZero
+
 --- Assert that a given number is *-0*, according to the definition of IEEE-754_ . The verification is done by dividing by the provided number and verifying that it yields *minus infinity* .\
 --- Be careful when dealing with *+0* and *-0*, see MinusZero_
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertMinusZero(value, extra_msg) end
 
---- **Alias**: *assert_not_plus_zero()*
----
+luaunit.assert_minus_zero = luaunit.assertMinusZero
+
 --- Assert that a given number is NOT *+0*, according to the definition of IEEE-754_ .\
 --- Be careful when dealing with *+0* and *-0*, see MinusZero_
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotPlusZero(value, extra_msg) end
 
---- **Alias**: *assert_not_minus_zero()*
----
+luaunit.assert_not_plus_zero = luaunit.assertNotPlusZero
+
 --- Assert that a given number is NOT *-0*, according to the definition of IEEE-754_ .\
 --- Be careful when dealing with *+0* and *-0*, see MinusZero_
 ---@param value number
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotMinusZero(value, extra_msg) end
 
---- **Alias**: *assert_almost_equals()*
----
+luaunit.assert_not_minus_zero = luaunit.assertNotMinusZero
+
 --- Assert that two floating point numbers or tables are equal by the defined margin.\
 --- The function accepts either floating point numbers or tables. Complex structures with nested tables are supported. Comparing tables with `assertAlmostEquals` works just like `assertEquals` with the difference that values are compared with a margin instead of with direct equality.\
 --- Be careful that depending on the calculation, it might make more sense to measure the absolute error or the relative error:
@@ -624,8 +650,8 @@ function luaunit.assertNotMinusZero(value, extra_msg) end
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertAlmostEquals(actual, expected, margin, extra_msg) end
 
---- **Alias**: *assert_not_almost_equals()*
----
+luaunit.assert_almost_equals = luaunit.assertAlmostEquals
+
 --- Assert that two floating point numbers are not equal by the defined margin.\
 --- Be careful that depending on the calculation, it might make more sense to measure the absolute error or the relative error.
 ---@param actual number
@@ -633,6 +659,8 @@ function luaunit.assertAlmostEquals(actual, expected, margin, extra_msg) end
 ---@param margin? number If margin is not provided, the machine epsilon *EPS* is used.
 ---@param extra_msg? string If provided, *extra_msg* is a string which will be printed along with the failure message.
 function luaunit.assertNotAlmostEquals(actual, expected, margin, extra_msg) end
+
+luaunit.assert_not_almost_equals = luaunit.assertNotAlmostEquals
 
 --[[
 Converts *value* to a nicely formatted string, whatever the type of the value. It supports in particular tables, nested table and even recursive tables. You can use it in your code to replace calls to *tostring()* .
